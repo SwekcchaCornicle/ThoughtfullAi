@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import os
+
 from aws_cdk import (
     Stack,
     Duration,
@@ -102,6 +104,8 @@ class ThoughtfullStack(Stack):
             environment={
                 "S3_BUCKET_NAME":
                     thoughtfull_bucket.bucket_name,
+                "BEDROCK_MODEL_ID":
+                    os.getenv("BEDROCK_MODEL_ID", "amazon.nova-lite-v1:0"),
             },
         )
 
@@ -112,6 +116,13 @@ class ThoughtfullStack(Stack):
 
         thoughtfull_bucket.grant_read_write(
             thought_lambda
+        )
+
+        thought_lambda.add_to_role_policy(
+            iam.PolicyStatement(
+                actions=["bedrock:InvokeModel"],
+                resources=["*"],
+            )
         )
 
 
@@ -183,3 +194,5 @@ class ThoughtfullStack(Stack):
 
             value=log_group.log_group_name,
         )
+
+
