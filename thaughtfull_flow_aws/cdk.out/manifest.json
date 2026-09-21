@@ -1,0 +1,179 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "ThoughtfullStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ThoughtfullStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ThoughtfullStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://630596767812/ap-south-1",
+      "properties": {
+        "templateFile": "ThoughtfullStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::630596767812:role/cdk-hnb659fds-deploy-role-630596767812-ap-south-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::630596767812:role/cdk-hnb659fds-cfn-exec-role-630596767812-ap-south-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-630596767812-ap-south-1/35de3f18574f39bc92e04eb280db2faceb0354e2cdbcafe4128005662644acf4.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ThoughtfullStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::630596767812:role/cdk-hnb659fds-lookup-role-630596767812-ap-south-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ThoughtfullStack.assets"
+      ],
+      "metadata": {
+        "/ThoughtfullStack/ThoughtfullS3Bucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullS3BucketC48989AB"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullS3Bucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullS3BucketPolicy8A9F44E5"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullLambdaLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullLambdaLogGroup7AD8F93D"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullLambdaRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullLambdaRole5CEDD1A6"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullLambdaRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullLambdaRoleDefaultPolicyEFB00A42"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtAnalyzerLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtAnalyzerLambdaE2CD6564"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApiF7DC0966"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApiDeployment07BE7CF136c8b306044d096aa4b1d84976335416"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApiDeploymentStageprod28329D1D"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApiEndpointF02AD46C"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApiOPTIONS00896D28"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/Default/thoughts/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApithoughtsD85EF95B"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/Default/thoughts/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApithoughtsOPTIONS0A983B49"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/Default/thoughts/POST/ApiPermission.ThoughtfullStackThoughtfullRestApi51C08108.POST..thoughts": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApithoughtsPOSTApiPermissionThoughtfullStackThoughtfullRestApi51C08108POSTthoughts025F27B2"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/Default/thoughts/POST/ApiPermission.Test.ThoughtfullStackThoughtfullRestApi51C08108.POST..thoughts": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApithoughtsPOSTApiPermissionTestThoughtfullStackThoughtfullRestApi51C08108POSTthoughts6B6654D2"
+          }
+        ],
+        "/ThoughtfullStack/ThoughtfullRestApi/Default/thoughts/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ThoughtfullRestApithoughtsPOSTE713B347"
+          }
+        ],
+        "/ThoughtfullStack/ApiUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiUrl"
+          }
+        ],
+        "/ThoughtfullStack/S3BucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "S3BucketName"
+          }
+        ],
+        "/ThoughtfullStack/LogGroupName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogGroupName"
+          }
+        ],
+        "/ThoughtfullStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/ThoughtfullStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ThoughtfullStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ThoughtfullStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
