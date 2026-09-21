@@ -83,7 +83,21 @@
       }
      ],
      "Version": "2012-10-17"
-    }
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
    },
    "Metadata": {
     "aws:cdk:path": "ThoughtfullStack/ThoughtfullLambdaRole/Resource"
@@ -130,6 +144,11 @@
          ]
         }
        ]
+      },
+      {
+       "Action": "bedrock:InvokeModel",
+       "Effect": "Allow",
+       "Resource": "*"
       }
      ],
      "Version": "2012-10-17"
@@ -150,13 +169,14 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-630596767812-ap-south-1",
-     "S3Key": "9b515d93139963a96415bcb49d7c245d9cacac4a35b11cbe69d3e58b859cbcdc.zip"
+     "S3Key": "840d48da83b77fcf7c26f11425d97594f7b89641d5d4c64f21a335640b047b76.zip"
     },
     "Environment": {
      "Variables": {
       "S3_BUCKET_NAME": {
        "Ref": "ThoughtfullS3BucketC48989AB"
-      }
+      },
+      "BEDROCK_MODEL_ID": "apac.amazon.nova-lite-v1:0"
      }
     },
     "FunctionName": "thought_analyzer",
@@ -181,7 +201,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "ThoughtfullStack/ThoughtAnalyzerLambda/Resource",
-    "aws:asset:path": "asset.9b515d93139963a96415bcb49d7c245d9cacac4a35b11cbe69d3e58b859cbcdc",
+    "aws:asset:path": "asset.840d48da83b77fcf7c26f11425d97594f7b89641d5d4c64f21a335640b047b76",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }

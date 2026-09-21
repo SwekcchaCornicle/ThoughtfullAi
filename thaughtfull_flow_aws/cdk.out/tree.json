@@ -148,7 +148,21 @@
                         }
                       ],
                       "Version": "2012-10-17"
-                    }
+                    },
+                    "managedPolicyArns": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                          ]
+                        ]
+                      }
+                    ]
                   }
                 },
                 "constructInfo": {
@@ -204,6 +218,11 @@
                                   ]
                                 }
                               ]
+                            },
+                            {
+                              "Action": "bedrock:InvokeModel",
+                              "Effect": "Allow",
+                              "Resource": "*"
                             }
                           ],
                           "Version": "2012-10-17"
@@ -271,13 +290,14 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-630596767812-ap-south-1",
-                      "s3Key": "9b515d93139963a96415bcb49d7c245d9cacac4a35b11cbe69d3e58b859cbcdc.zip"
+                      "s3Key": "840d48da83b77fcf7c26f11425d97594f7b89641d5d4c64f21a335640b047b76.zip"
                     },
                     "environment": {
                       "variables": {
                         "S3_BUCKET_NAME": {
                           "Ref": "ThoughtfullS3BucketC48989AB"
-                        }
+                        },
+                        "BEDROCK_MODEL_ID": "apac.amazon.nova-lite-v1:0"
                       }
                     },
                     "functionName": "thought_analyzer",

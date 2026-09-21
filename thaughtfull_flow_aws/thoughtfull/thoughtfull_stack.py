@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import json
 import os
 
 from aws_cdk import (
@@ -19,6 +20,9 @@ from constructs import Construct
 LAMBDA_ASSET_PATH = str(
     Path(__file__).parent / "lambdas" / "thought_analyzer"
 )
+ENV_CONFIG_PATH = Path(__file__).resolve().parent.parent / "env_config.json"
+with ENV_CONFIG_PATH.open(encoding="utf-8") as env_config_file:
+    ENV_CONFIG = json.load(env_config_file)
 
 
 class ThoughtfullStack(Stack):
@@ -76,6 +80,12 @@ class ThoughtfullStack(Stack):
             ),
         )
 
+        lambda_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name(
+                "service-role/AWSLambdaBasicExecutionRole"
+            )
+        )
+
 
         # ============================================
         # LAMBDA
@@ -105,7 +115,10 @@ class ThoughtfullStack(Stack):
                 "S3_BUCKET_NAME":
                     thoughtfull_bucket.bucket_name,
                 "BEDROCK_MODEL_ID":
-                    os.getenv("BEDROCK_MODEL_ID", "amazon.nova-lite-v1:0"),
+                    os.getenv(
+                        "BEDROCK_MODEL_ID",
+                        ENV_CONFIG["bedrock_model_id"],
+                    ),
             },
         )
 
