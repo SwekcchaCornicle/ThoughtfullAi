@@ -16,6 +16,10 @@ import Settings from "./pages/Settings";
 import CategoryQuestions from "./pages/CategoryQuestions";
 import Collaboration from "./pages/Collaboration";
 
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://ogo8ekq6g0.execute-api.ap-south-1.amazonaws.com/prod";
+
 function App() {
   // =========================
   // Navigation
@@ -44,6 +48,10 @@ function App() {
 
   const [chatType, setChatType] =
     useState("Individual");
+
+  const [analysis, setAnalysis] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState("");
 
 
   // =========================
@@ -189,14 +197,41 @@ function App() {
   // Start Chat
   // =========================
 
-  const startConversation = () => {
+  const startConversation = async () => {
 
     if (!thought.trim()) {
       alert("Please write something first.");
       return;
     }
 
-    setPage("discussion");
+    setIsAnalyzing(true);
+    setAnalysisError("");
+
+    try {
+      const response = await fetch(`${API_URL}/thoughts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ thought: thought.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Unable to analyze the thought.");
+      }
+
+      setAnalysis(data.analysis);
+      setPage("discussion");
+    } catch (error) {
+      console.error("Thought analysis failed:", error);
+      setAnalysisError(
+        "Unable to analyze your thought right now. Please try again."
+      );
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
 
@@ -374,6 +409,8 @@ const startCollaboration = () => {
             setChatType={setChatType}
 
             startConversation={startConversation}
+            isAnalyzing={isAnalyzing}
+            analysisError={analysisError}
 
             openCollaborate={openCollaborate}
 
@@ -473,6 +510,8 @@ const startCollaboration = () => {
           <Discussion
 
             thought={thought}
+
+            analysis={analysis}
 
             chatType={chatType}
 

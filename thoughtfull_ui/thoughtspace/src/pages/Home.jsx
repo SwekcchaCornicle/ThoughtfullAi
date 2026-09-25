@@ -9,6 +9,8 @@ function Home({
   attachedFile,
   fileType,
   removeAttachment,
+  isAnalyzing,
+  analysisError,
   setSelectedQuestion,
 }) {
   return (
@@ -127,8 +129,9 @@ function Home({
               type="button"
               className="start-button"
               onClick={startConversation}
+              disabled={isAnalyzing}
             >
-              Start Chat →
+              {isAnalyzing ? "Analyzing..." : "Start Chat →"}
             </button>
 
           </div>
@@ -185,6 +188,12 @@ function Home({
         )}
 
       </div>
+
+      {analysisError && (
+        <p className="analysis-error" role="alert">
+          {analysisError}
+        </p>
+      )}
 
 
       {/* =================================

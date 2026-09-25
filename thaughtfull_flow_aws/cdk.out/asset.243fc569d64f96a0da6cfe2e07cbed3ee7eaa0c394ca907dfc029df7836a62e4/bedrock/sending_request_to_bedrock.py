@@ -35,17 +35,6 @@ explanations outside the JSON. The object must contain exactly these keys:
 "category", "subcategory", "intent", "summary", "discussion_type", and
 "tags". All values except "tags" must be strings. "tags" must be an array
 of strings.
-
-For example, classify this thought as follows:
-User thought: Should I learn Kubernetes after AWS?
-{
-    "category": "Technology",
-    "subcategory": "Cloud Computing",
-    "intent": "Educational Inquiry",
-    "summary": "The user is asking about the learning sequence between AWS and Kubernetes.",
-    "discussion_type": "Question",
-    "tags": ["AWS", "Kubernetes", "Cloud", "Learning Path"]
-}
 """
             }
         ],

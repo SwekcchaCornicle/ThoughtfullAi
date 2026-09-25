@@ -893,6 +893,96 @@ textarea {
   margin: 30px 0;
 }
 
+.ai-analysis {
+  background: #ffffff;
+  border: 1px solid #e3e3e3;
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 34px;
+}
+
+.ai-analysis-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.ai-analysis-eyebrow,
+.analysis-classification span,
+.analysis-summary > span,
+.analysis-tags > span {
+  display: block;
+  color: #777;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ai-analysis h2 {
+  margin: 5px 0 0;
+  font-size: 22px;
+}
+
+.analysis-discussion-type {
+  background: #eeeeff;
+  border-radius: 999px;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 10px;
+}
+
+.analysis-classification {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.analysis-classification strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+}
+
+.analysis-summary {
+  padding: 20px 0;
+}
+
+.analysis-summary p {
+  color: #555;
+  line-height: 1.6;
+  margin: 7px 0 0;
+}
+
+.analysis-tags > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.analysis-tag {
+  background: #f3f3f3;
+  border-radius: 999px;
+  color: #444;
+  font-size: 13px;
+  padding: 7px 10px;
+}
+
+.analysis-error {
+  background: #fff4f2;
+  border: 1px solid #f3c7c0;
+  border-radius: 10px;
+  color: #a33a2b;
+  margin: 12px 0 0;
+  padding: 12px 14px;
+}
+
 
 /* =====================================================
    CONVERSATION
@@ -1176,6 +1266,14 @@ textarea {
 
   .discussion-title {
     font-size: 25px;
+  }
+
+  .analysis-classification {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-analysis-header {
+    align-items: flex-start;
   }
 
   .thought-actions-row {

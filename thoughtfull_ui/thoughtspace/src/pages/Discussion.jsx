@@ -1,5 +1,6 @@
 function Discussion({
   thought,
+  analysis,
   chatType,
   setPage,
   communityThought,
@@ -32,6 +33,51 @@ function Discussion({
       </div>
 
       <div className="discussion-divider"></div>
+
+      {analysis && (
+        <section className="ai-analysis" aria-labelledby="ai-analysis-title">
+          <div className="ai-analysis-header">
+            <div>
+              <span className="ai-analysis-eyebrow">ThoughtFlow AI</span>
+              <h2 id="ai-analysis-title">AI Analysis</h2>
+            </div>
+            <span className="analysis-discussion-type">
+              {analysis.discussion_type}
+            </span>
+          </div>
+
+          <div className="analysis-classification">
+            <div>
+              <span>Category</span>
+              <strong>{analysis.category}</strong>
+            </div>
+            <div>
+              <span>Subcategory</span>
+              <strong>{analysis.subcategory}</strong>
+            </div>
+            <div>
+              <span>Intent</span>
+              <strong>{analysis.intent}</strong>
+            </div>
+          </div>
+
+          <div className="analysis-summary">
+            <span>Summary</span>
+            <p>{analysis.summary}</p>
+          </div>
+
+          <div className="analysis-tags">
+            <span>Tags</span>
+            <div>
+              {analysis.tags.map((tag) => (
+                <span className="analysis-tag" key={tag}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <div className="conversation-section">
         <h2>💭 What do you think?</h2>

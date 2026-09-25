@@ -169,7 +169,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-630596767812-ap-south-1",
-     "S3Key": "e96b9cb53010000e1cffd51a4d3ede76a074f84812e24e19e527660c2c8a293e.zip"
+     "S3Key": "8014b0ec7a8c9eaaed3337c86cc57f2125aeed123a3162c50d7eb54d5c8f67ee.zip"
     },
     "Environment": {
      "Variables": {
@@ -201,7 +201,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "ThoughtfullStack/ThoughtAnalyzerLambda/Resource",
-    "aws:asset:path": "asset.e96b9cb53010000e1cffd51a4d3ede76a074f84812e24e19e527660c2c8a293e",
+    "aws:asset:path": "asset.8014b0ec7a8c9eaaed3337c86cc57f2125aeed123a3162c50d7eb54d5c8f67ee",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -215,7 +215,7 @@
     "aws:cdk:path": "ThoughtfullStack/ThoughtfullRestApi/Resource"
    }
   },
-  "ThoughtfullRestApiDeployment07BE7CF136c8b306044d096aa4b1d84976335416": {
+  "ThoughtfullRestApiDeployment07BE7CF17fd17e746118ed03bd8144f6622c235b": {
    "Type": "AWS::ApiGateway::Deployment",
    "Properties": {
     "Description": "Automatically created by the RestApi construct",
@@ -230,14 +230,15 @@
     "ThoughtfullRestApithoughtsD85EF95B"
    ],
    "Metadata": {
-    "aws:cdk:path": "ThoughtfullStack/ThoughtfullRestApi/Deployment/Resource"
+    "aws:cdk:path": "ThoughtfullStack/ThoughtfullRestApi/Deployment/Resource",
+    "aws:cdk:do-not-refactor": true
    }
   },
   "ThoughtfullRestApiDeploymentStageprod28329D1D": {
    "Type": "AWS::ApiGateway::Stage",
    "Properties": {
     "DeploymentId": {
-     "Ref": "ThoughtfullRestApiDeployment07BE7CF136c8b306044d096aa4b1d84976335416"
+     "Ref": "ThoughtfullRestApiDeployment07BE7CF17fd17e746118ed03bd8144f6622c235b"
     },
     "RestApiId": {
      "Ref": "ThoughtfullRestApiF7DC0966"
@@ -259,8 +260,7 @@
       {
        "ResponseParameters": {
         "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-        "method.response.header.Access-Control-Allow-Origin": "'http://localhost:5173'",
-        "method.response.header.Vary": "'Origin'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
         "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
        },
        "StatusCode": "204"
@@ -276,7 +276,6 @@
       "ResponseParameters": {
        "method.response.header.Access-Control-Allow-Headers": true,
        "method.response.header.Access-Control-Allow-Origin": true,
-       "method.response.header.Vary": true,
        "method.response.header.Access-Control-Allow-Methods": true
       },
       "StatusCode": "204"
@@ -325,8 +324,7 @@
       {
        "ResponseParameters": {
         "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-        "method.response.header.Access-Control-Allow-Origin": "'http://localhost:5173'",
-        "method.response.header.Vary": "'Origin'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
         "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
        },
        "StatusCode": "204"
@@ -342,7 +340,6 @@
       "ResponseParameters": {
        "method.response.header.Access-Control-Allow-Headers": true,
        "method.response.header.Access-Control-Allow-Origin": true,
-       "method.response.header.Vary": true,
        "method.response.header.Access-Control-Allow-Methods": true
       },
       "StatusCode": "204"
@@ -457,7 +454,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WPwU7DMAyGn2X31DDKheMGgguIqnuAKUtNF5omVe2oqqK8O0raqeP0f7Z//bafYF8+w+NOTlSopiuMvkA4sVSdkBOdA5UQjl51yOL1x660SOWMVvPWXuulOErCKIxrCcKnaz9G54dkvXEUWvYQamcwtbNugQtFYWR/aSSEd28Va2fT7J4rHHtNpJ2NgsqzJEImOCQRctCtZJzkDKFG4sOg86YV33Awbu7R5sfuqhPLNt+0QI3k/KgwPSS+kK+uScOVbtM1OXOMWzufkoK0bZPn2/Pg+Z9bVDNfnX0oYV/Cy+6XtC5Gb1n3CPWif1g0XqWlAQAA"
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02PTU7DMBCFz9K9O5RmgVi2INiAiNIDVK4zpEMcO8qMFUWW746cpGpX73vz7PnZw/5lB7uNHnlr6nZr6QLxJNq0So98jlxAPAbToqi3X7fSIqW3ZKZ7efWLOWrGpKxvGOKXbz4HH/r89MZJke4gVt5iLs96b7hQUlZ3l1pD/AjOCHmXs0cuceiImbxLiouzZkZhOGRRuqdGC456glghy6GnedKK79hbP3Xo5sMe3El0M++0QIXsw2AwH6S+Ua6+zuFKt3TtPHNKat4g/yfX5OgnSB8kqXKSq3dPBTwX8Lr5Y6LtEJxQh1At+g8zv5ZYkAEAAA=="
    },
    "Metadata": {
     "aws:cdk:path": "ThoughtfullStack/CDKMetadata/Default"

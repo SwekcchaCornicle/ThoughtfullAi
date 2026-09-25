@@ -25,10 +25,7 @@ def lambda_handler(event, context):
 		logger.exception("Unable to parse the request body")
 		return {
 			"statusCode": 400,
-			"headers": {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-			},
+			"headers": {"Content-Type": "application/json"},
 			"body": json.dumps({"error": "Invalid request body"}),
 		}
 	logger.info("Parsed event body: %s", json.dumps(body, default=str))
@@ -38,10 +35,7 @@ def lambda_handler(event, context):
 		logger.warning("No valid thought was found in the event")
 		return {
 			"statusCode": 400,
-			"headers": {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-			},
+			"headers": {"Content-Type": "application/json"},
 			"body": json.dumps({"error": "thought is required"}),
 		}
 
@@ -52,20 +46,14 @@ def lambda_handler(event, context):
 		logger.exception("Thought analysis failed")
 		return {
 			"statusCode": 500,
-			"headers": {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-			},
+			"headers": {"Content-Type": "application/json"},
 			"body": json.dumps({
 				"error": "Unable to analyze the thought right now."
 			}),
 		}
 	response = {
 		"statusCode": 200,
-		"headers": {
-			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*",
-		},
+		"headers": {"Content-Type": "application/json"},
 		"body": json.dumps({"analysis": analysis}),
 	}
 	logger.info("Lambda response: %s", json.dumps(response, default=str))

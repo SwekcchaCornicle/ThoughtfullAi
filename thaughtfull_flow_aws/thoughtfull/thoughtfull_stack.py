@@ -151,9 +151,7 @@ class ThoughtfullStack(Stack):
 
             default_cors_preflight_options=
                 apigateway.CorsOptions(
-                    allow_origins=[
-                        "http://localhost:5173"
-                    ],
+                    allow_origins=apigateway.Cors.ALL_ORIGINS,
 
                     allow_methods=[
                         "POST",
