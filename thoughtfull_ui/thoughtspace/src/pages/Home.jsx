@@ -113,15 +113,15 @@ function Home({
             <button
               type="button"
               className={
-                chatType === "Corporate"
+                chatType === "Collaborate"
                   ? "type-button active-type"
                   : "type-button"
               }
               onClick={() =>
-                setChatType("Corporate")
+                setChatType("Collaborate")
               }
             >
-              Corporate
+              Collaborate
             </button>
 
 

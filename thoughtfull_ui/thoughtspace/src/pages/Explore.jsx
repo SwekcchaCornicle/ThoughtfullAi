@@ -1,8 +1,16 @@
 function Explore({
   categories,
+  userThoughts = [],
   setSelectedCategory,
   openSubcategory,
+  setSelectedQuestion,
+  openCollaborate,
 }) {
+
+  const openUserThought = (thought) => {
+    setSelectedQuestion(thought.text);
+    openCollaborate("explore", thought.mode, thought.id);
+  };
 
   return (
     <section className="explore-page">
@@ -32,6 +40,33 @@ function Explore({
       <h2 className="choose-topic">
         Choose a topic
       </h2>
+
+      {userThoughts.length > 0 && (
+        <div className="user-thoughts-section">
+          <h2 className="choose-topic">Your thoughts</h2>
+
+          <div className="question-list">
+            {userThoughts.map((thought) => (
+              <div className="question-card" key={thought.id}>
+                <div className="question-meta">
+                  <span>{thought.mode === "collaborative" ? "👥 Collaborative" : "👤 Individual"}</span>
+                  <span>💭 {thought.thoughts} thoughts</span>
+                </div>
+
+                <h2>{thought.text}</h2>
+
+                <button
+                  type="button"
+                  className="collaborate-button"
+                  onClick={() => openUserThought(thought)}
+                >
+                  {thought.mode === "collaborative" ? "Collaborate" : "Read / Analyze"}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
 
       {/* CATEGORY GRID */}

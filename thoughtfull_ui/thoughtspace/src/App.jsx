@@ -15,12 +15,18 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import CategoryQuestions from "./pages/CategoryQuestions";
 import Collaboration from "./pages/Collaboration";
+import Auth from "./pages/Auth";
 
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  "https://ogo8ekq6g0.execute-api.ap-south-1.amazonaws.com/prod";
+const API_URL = import.meta.env.VITE_API_URL || "https://ogo8ekq6g0.execute-api.ap-south-1.amazonaws.com/prod";
 
 function App() {
+  const [session, setSession] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("thoughtspace_session")) || null;
+    } catch {
+      return null;
+    }
+  });
   // =========================
   // Navigation
   // =========================
@@ -36,6 +42,9 @@ function App() {
   const [selectedQuestion, setSelectedQuestion] =
     useState("");
 
+  const [selectedPostId, setSelectedPostId] =
+    useState("");
+
   const [collaborationBackPage, setCollaborationBackPage] =
   useState("categoryQuestions");
 
@@ -48,6 +57,8 @@ function App() {
 
   const [chatType, setChatType] =
     useState("Individual");
+
+  const [userThoughts, setUserThoughts] = useState([]);
 
   const [analysis, setAnalysis] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -189,8 +200,10 @@ function App() {
     useState({
       community: true,
       ai: false,
-      challenge: false,
+      read: false,
     });
+
+  const [canCollaborate, setCanCollaborate] = useState(true);
 
 
   // =========================
@@ -212,8 +225,12 @@ function App() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${session.token}`,
         },
-        body: JSON.stringify({ thought: thought.trim() }),
+        body: JSON.stringify({
+          thought: thought.trim(),
+          mode: chatType === "Collaborate" ? "collaborative" : "individual",
+        }),
       });
 
       const data = await response.json();
@@ -222,8 +239,41 @@ function App() {
         throw new Error(data.error || "Unable to analyze the thought.");
       }
 
-      setAnalysis(data.analysis);
-      setPage("discussion");
+      const classifiedCategory = categories.find(
+        (category) =>
+          category.name.toLowerCase() ===
+          String(data.post.category).toLowerCase()
+      );
+      const classifiedSubcategory = classifiedCategory?.subcategories.find(
+        (subcategory) =>
+          subcategory.toLowerCase() ===
+          String(data.post.subcategory).toLowerCase()
+      );
+      const categoryName =
+        classifiedCategory?.name || data.post.category;
+      const subcategoryName =
+        classifiedSubcategory || data.post.subcategory;
+
+      setUserThoughts((current) => [
+        {
+          id: data.post.id,
+          name: data.post.author,
+          avatar: "👤",
+          time: "Just now",
+          text: data.post.thought,
+          type: data.post.mode === "collaborative" ? "Collaborative" : "Individual",
+          mode: data.post.mode,
+          thoughts: data.post.thoughts,
+          category: data.post.category,
+          subcategory: data.post.subcategory,
+        },
+        ...current,
+      ]);
+
+      setSelectedCategory(categoryName);
+      setSelectedSubcategory(subcategoryName);
+      setThought("");
+      setPage("categoryQuestions");
     } catch (error) {
       console.error("Thought analysis failed:", error);
       setAnalysisError(
@@ -239,8 +289,19 @@ function App() {
   // Open Collaborate Modal
   // =========================
 
-const openCollaborate = (backPage = "categoryQuestions") => {
+const openCollaborate = (
+  backPage = "categoryQuestions",
+  mode = "collaborative",
+  postId = ""
+) => {
   setCollaborationBackPage(backPage);
+  setSelectedPostId(postId);
+  setCollaborationOptions({
+    community: mode === "collaborative",
+    ai: false,
+    read: mode === "individual",
+  });
+  setCanCollaborate(mode === "collaborative");
   setShowCollaborate(true);
 };
 
@@ -357,14 +418,11 @@ const startCollaboration = () => {
   // =========================
 
   const toggleOption = (option) => {
-
-    setCollaborationOptions((current) => ({
-
-      ...current,
-
-      [option]: !current[option],
-
-    }));
+    setCollaborationOptions({
+      community: option === "community",
+      ai: option === "ai",
+      read: option === "read",
+    });
 
   };
 
@@ -435,6 +493,15 @@ const startCollaboration = () => {
           <Explore
             categories={categories}
 
+            apiUrl={API_URL}
+            token={session.token}
+
+            userThoughts={userThoughts}
+
+            setSelectedQuestion={setSelectedQuestion}
+
+            openCollaborate={openCollaborate}
+
             setSelectedCategory={
               setSelectedCategory
             }
@@ -473,6 +540,9 @@ const startCollaboration = () => {
               setSelectedQuestion
             }
 
+            apiUrl={API_URL}
+            token={session.token}
+
           />
         );
 
@@ -485,13 +555,19 @@ const startCollaboration = () => {
   return (
     <Collaboration
       question={selectedQuestion}
+      postId={selectedPostId}
+      apiUrl={API_URL}
+      token={session.token}
       collaborationOptions={collaborationOptions}
+      backPage={collaborationBackPage}
       setPage={setPage}
 
-      communityThoughts={communityThoughts}
+      communityThoughts={
+        questionThoughts[selectedQuestion] || communityThoughts
+      }
       communityThought={communityThought}
       setCommunityThought={setCommunityThought}
-      postCommunityThought={postCommunityThought}
+      postCommunityThought={postQuestionThought}
 
       handleFileSelect={handleFileSelect}
       attachedFile={attachedFile}
@@ -620,6 +696,21 @@ const startCollaboration = () => {
   // UI
   // =========================
 
+  if (!session) {
+    return (
+      <Auth
+        apiUrl={API_URL}
+        onAuthenticated={(nextSession) => {
+          localStorage.setItem(
+            "thoughtspace_session",
+            JSON.stringify(nextSession)
+          );
+          setSession(nextSession);
+        }}
+      />
+    );
+  }
+
   return (
 
     <div className="app">
@@ -667,6 +758,8 @@ const startCollaboration = () => {
           collaborationOptions={
             collaborationOptions
           }
+
+          canCollaborate={canCollaborate}
 
           toggleOption={
             toggleOption

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 const questions = {
 
   AI: [
@@ -78,10 +80,56 @@ function CategoryQuestions({
   setPage,
   openCollaborate,
   setSelectedQuestion,
+  apiUrl,
+  token,
 }) {
+
+  const [posts, setPosts] = useState([]);
+  const [nextCursor, setNextCursor] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [loadError, setLoadError] = useState("");
 
   const categoryQuestions =
     questions[selectedSubcategory] || [];
+
+  useEffect(() => {
+    let isCurrent = true;
+    setIsLoading(true);
+    setHasLoaded(false);
+    setLoadError("");
+    fetch(
+      `${apiUrl}/thoughts?category=${encodeURIComponent(selectedCategory)}&subcategory=${encodeURIComponent(selectedSubcategory)}&limit=10`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Unable to load posts.");
+        if (isCurrent) {
+          setPosts(data.posts || []);
+          setNextCursor(data.nextCursor || "");
+          setHasLoaded(true);
+        }
+      })
+      .catch((error) => {
+        if (isCurrent) setLoadError(error.message);
+      })
+      .finally(() => {
+        if (isCurrent) setIsLoading(false);
+      });
+    return () => {
+      isCurrent = false;
+    };
+  }, [apiUrl, selectedCategory, selectedSubcategory, token]);
+
+  const displayQuestions = hasLoaded && posts.length > 0
+    ? posts.map((post) => ({
+        ...post,
+        text: post.thought,
+        author: post.author,
+        id: post.id,
+      }))
+    : hasLoaded ? [] : categoryQuestions;
 
 
   const handleCollaborate = (question) => {
@@ -131,7 +179,11 @@ function CategoryQuestions({
 
       <div className="question-list">
 
-        {categoryQuestions.length === 0 ? (
+        {isLoading ? (
+          <div className="empty-questions"><p>Loading thoughts...</p></div>
+        ) : loadError ? (
+          <div className="empty-questions"><p>{loadError}</p></div>
+        ) : displayQuestions.length === 0 ? (
 
           <div className="empty-questions">
 
@@ -148,7 +200,7 @@ function CategoryQuestions({
 
         ) : (
 
-          categoryQuestions.map(
+          displayQuestions.map(
             (question) => (
 
               <div
@@ -168,7 +220,7 @@ function CategoryQuestions({
                   </span>
 
                   <span>
-                    💭 {question.thoughts} thoughts
+                    💭 {question.thoughts || 0} thoughts
                   </span>
 
                 </div>
@@ -179,10 +231,14 @@ function CategoryQuestions({
   className="collaborate-button"
   onClick={() => {
     setSelectedQuestion(question.text);
-    openCollaborate("categoryQuestions");
+    openCollaborate(
+      "categoryQuestions",
+      question.mode || "collaborative",
+      question.id
+    );
   }}
 >
-  Collaborate
+  {question.mode === "individual" ? "Read / Analyze" : "Collaborate"}
 </button>
 
               </div>
@@ -193,6 +249,24 @@ function CategoryQuestions({
         )}
 
       </div>
+
+      {nextCursor && (
+        <button
+          type="button"
+          className="collaborate-button"
+          onClick={async () => {
+            const response = await fetch(
+              `${apiUrl}/thoughts?category=${encodeURIComponent(selectedCategory)}&subcategory=${encodeURIComponent(selectedSubcategory)}&limit=10&cursor=${encodeURIComponent(nextCursor)}`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+            const data = await response.json();
+            setPosts((current) => [...current, ...(data.posts || [])]);
+            setNextCursor(data.nextCursor || "");
+          }}
+        >
+          Load more
+        </button>
+      )}
 
     </section>
   );

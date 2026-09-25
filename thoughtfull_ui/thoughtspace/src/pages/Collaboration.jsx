@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Collaboration({
   question,
+  postId,
+  apiUrl,
+  token,
   collaborationOptions = {},
   setPage,
   backPage = "categoryQuestions",
@@ -19,12 +22,31 @@ function Collaboration({
       ? "community"
       : collaborationOptions.ai
       ? "ai"
-      : "challenge"
+      : "read"
   );
 
   const thoughts = Array.isArray(communityThoughts)
     ? communityThoughts
     : [];
+  const [analysis, setAnalysis] = useState(null);
+  const [analysisError, setAnalysisError] = useState("");
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
+
+  useEffect(() => {
+    if (activeMode !== "ai" || !postId) return;
+    setIsLoadingAnalysis(true);
+    setAnalysisError("");
+    fetch(`${apiUrl}/thoughts/${postId}/analysis`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Unable to analyze this thought.");
+        setAnalysis(data.analysis);
+      })
+      .catch((error) => setAnalysisError(error.message))
+      .finally(() => setIsLoadingAnalysis(false));
+  }, [activeMode, apiUrl, postId, token]);
 
   return (
     <section className="collaboration-page">
@@ -80,7 +102,7 @@ function Collaboration({
             }
             onClick={() => setActiveMode("community")}
           >
-            👥 Ask Community
+            👥 Collaborate
           </button>
         )}
 
@@ -96,6 +118,21 @@ function Collaboration({
             onClick={() => setActiveMode("ai")}
           >
             🤖 AI Analysis
+          </button>
+        )}
+
+
+        {collaborationOptions.read && (
+          <button
+            type="button"
+            className={
+              activeMode === "read"
+                ? "mode-tag active-mode"
+                : "mode-tag"
+            }
+            onClick={() => setActiveMode("read")}
+          >
+            📖 Read Only
           </button>
         )}
 
@@ -274,6 +311,30 @@ function Collaboration({
 
 
       {/* =====================================================
+          READ ONLY MODE
+      ===================================================== */}
+
+      {activeMode === "read" && collaborationOptions.read && (
+        <div className="collaboration-content">
+          <h2 className="section-title">Post and related comments</h2>
+
+          <div className="community-thoughts">
+            {thoughts.map((item) => (
+              <div className="community-thought-card" key={item.id}>
+                <div className="thought-user">
+                  <span>{item.avatar || "👤"}</span>
+                  <strong>{item.name || "User"}</strong>
+                </div>
+                <p>{item.text}</p>
+                <span className="thought-time">{item.time || "Just now"}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+
+      {/* =====================================================
           AI ANALYSIS MODE
       ===================================================== */}
 
@@ -281,6 +342,20 @@ function Collaboration({
         collaborationOptions.ai && (
 
         <div className="ai-analysis-card">
+
+          {isLoadingAnalysis && <p>Analyzing this thought...</p>}
+          {analysisError && <p className="analysis-error">{analysisError}</p>}
+          {analysis && (
+            <div className="ai-analysis-section">
+              <h3>Bedrock analysis</h3>
+              <p><strong>Category:</strong> {analysis.category}</p>
+              <p><strong>Subcategory:</strong> {analysis.subcategory}</p>
+              <p><strong>Intent:</strong> {analysis.intent}</p>
+              <p><strong>Summary:</strong> {analysis.summary}</p>
+              <p><strong>Discussion type:</strong> {analysis.discussion_type}</p>
+              <p><strong>Tags:</strong> {analysis.tags.join(", ")}</p>
+            </div>
+          )}
 
           <div className="ai-analysis-header">
 

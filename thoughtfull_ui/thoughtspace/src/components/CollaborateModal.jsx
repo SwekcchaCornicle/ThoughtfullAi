@@ -1,5 +1,6 @@
 function CollaborateModal({
   collaborationOptions,
+  canCollaborate,
   toggleOption,
   onClose,
   onStartCollaboration,
@@ -33,9 +34,10 @@ function CollaborateModal({
 
 
         {/* =================================
-            ASK COMMUNITY
+          COLLABORATE
         ================================= */}
 
+        {canCollaborate && (
         <button
           type="button"
           className={
@@ -63,17 +65,17 @@ function CollaborateModal({
           <div className="option-content">
 
             <strong>
-              Ask Community
+              Collaborate
             </strong>
 
             <span>
-              Get different perspectives from
-              other people.
+              Post your thought and discuss it with other people.
             </span>
 
           </div>
 
         </button>
+        )}
 
 
         {/* =================================
@@ -107,12 +109,11 @@ function CollaborateModal({
           <div className="option-content">
 
             <strong>
-              Let AI Analyze
+              AI Analysis
             </strong>
 
             <span>
-              Understand the discussion,
-              summarize and find patterns.
+              Summarize the discussion and find patterns.
             </span>
 
           </div>
@@ -121,24 +122,24 @@ function CollaborateModal({
 
 
         {/* =================================
-            CHALLENGE
+          READ ONLY
         ================================= */}
 
         <button
           type="button"
           className={
-            collaborationOptions.challenge
+            collaborationOptions.read
               ? "collaboration-option selected"
               : "collaboration-option"
           }
           onClick={() =>
-            toggleOption("challenge")
+            toggleOption("read")
           }
         >
 
           <div className="option-checkbox">
 
-            {collaborationOptions.challenge
+            {collaborationOptions.read
               ? "✓"
               : ""}
 
@@ -151,12 +152,11 @@ function CollaborateModal({
           <div className="option-content">
 
             <strong>
-              Challenge My Thinking
+              Read Only
             </strong>
 
             <span>
-              Find counterarguments,
-              assumptions and blind spots.
+              View the post and related comments without posting.
             </span>
 
           </div>

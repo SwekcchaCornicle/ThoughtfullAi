@@ -12,6 +12,8 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_apigateway as apigateway,
     aws_logs as logs,
+    aws_dynamodb as dynamodb,
+    aws_secretsmanager as secretsmanager,
 )
 
 from constructs import Construct
@@ -86,6 +88,43 @@ class ThoughtfullStack(Stack):
             )
         )
 
+        posts_table = dynamodb.Table(
+            self,
+            "ThoughtfullPostsTable",
+            partition_key=dynamodb.Attribute(
+                name="post_id",
+                type=dynamodb.AttributeType.STRING,
+            ),
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
+        )
+        posts_table.add_global_secondary_index(
+            index_name="CategoryIndex",
+            partition_key=dynamodb.Attribute(
+                name="category_key",
+                type=dynamodb.AttributeType.STRING,
+            ),
+            sort_key=dynamodb.Attribute(
+                name="created_at",
+                type=dynamodb.AttributeType.STRING,
+            ),
+            projection_type=dynamodb.ProjectionType.ALL,
+        )
+
+        users_table = dynamodb.Table(
+            self,
+            "ThoughtfullUsersTable",
+            partition_key=dynamodb.Attribute(
+                name="user_id",
+                type=dynamodb.AttributeType.STRING,
+            ),
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
+        )
+
+        auth_secret = secretsmanager.Secret(
+            self,
+            "ThoughtfullAuthSecret",
+        )
+
 
         # ============================================
         # LAMBDA
@@ -119,6 +158,9 @@ class ThoughtfullStack(Stack):
                         "BEDROCK_MODEL_ID",
                         ENV_CONFIG["bedrock_model_id"],
                     ),
+                "POSTS_TABLE_NAME": posts_table.table_name,
+                "USERS_TABLE_NAME": users_table.table_name,
+                "AUTH_SECRET": auth_secret.secret_value.unsafe_unwrap(),
             },
         )
 
@@ -130,6 +172,9 @@ class ThoughtfullStack(Stack):
         thoughtfull_bucket.grant_read_write(
             thought_lambda
         )
+        posts_table.grant_read_write_data(thought_lambda)
+        users_table.grant_read_write_data(thought_lambda)
+        auth_secret.grant_read(thought_lambda)
 
         thought_lambda.add_to_role_policy(
             iam.PolicyStatement(
@@ -155,11 +200,13 @@ class ThoughtfullStack(Stack):
 
                     allow_methods=[
                         "POST",
+                        "GET",
                         "OPTIONS"
                     ],
 
                     allow_headers=[
-                        "Content-Type"
+                        "Content-Type",
+                        "Authorization",
                     ],
                 ),
         )
@@ -178,6 +225,23 @@ class ThoughtfullStack(Stack):
             apigateway.LambdaIntegration(
                 thought_lambda
             ),
+        )
+        thoughts_resource.add_method(
+            "GET",
+            apigateway.LambdaIntegration(thought_lambda),
+        )
+
+        auth_resource = api.root.add_resource("auth")
+        for auth_action in ["register", "login"]:
+            auth_resource.add_resource(auth_action).add_method(
+                "POST",
+                apigateway.LambdaIntegration(thought_lambda),
+            )
+
+        post_resource = thoughts_resource.add_resource("{postId}")
+        post_resource.add_resource("analysis").add_method(
+            "GET",
+            apigateway.LambdaIntegration(thought_lambda),
         )
 
 
